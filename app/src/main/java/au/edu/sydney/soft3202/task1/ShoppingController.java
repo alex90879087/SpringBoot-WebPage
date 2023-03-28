@@ -53,6 +53,7 @@ public class ShoppingController {
         headers.add("Set-Cookie", setCookieHeaderValue);
 
         // Redirect to the cart page, with the session-cookie-setting headers.
+        System.out.println(headers);
         return ResponseEntity.status(HttpStatus.FOUND).headers(headers).location(URI.create("/cart")).build();
     }
 
