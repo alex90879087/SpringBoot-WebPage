@@ -30,6 +30,8 @@ public class ShoppingController {
 
     String[] users = {"A", "B", "C", "D", "E"};
 
+    Map<String, ShoppingBasket> baskets = new HashMap<>();
+
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestParam(value = "user", defaultValue = "") String user) {
 
@@ -52,6 +54,9 @@ public class ShoppingController {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Set-Cookie", setCookieHeaderValue);
 
+        if (!baskets.containsKey(user)) baskets.put(user, new ShoppingBasket());
+
+
         // Redirect to the cart page, with the session-cookie-setting headers.
         System.out.println(headers);
         return ResponseEntity.status(HttpStatus.FOUND).headers(headers).location(URI.create("/cart")).build();
@@ -63,6 +68,10 @@ public class ShoppingController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorised.\n");
         }
 
+        String user = sessions.get(sessionToken);
+        ShoppingBasket tt = baskets.get(user);
+
+        String display = "";
         return ResponseEntity.status(HttpStatus.OK).body("[" + counter + "]");
     }
 
