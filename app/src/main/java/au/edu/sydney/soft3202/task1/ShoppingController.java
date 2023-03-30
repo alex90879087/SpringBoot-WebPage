@@ -1,14 +1,12 @@
 package au.edu.sydney.soft3202.task1;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.security.SecureRandom;
@@ -56,23 +54,39 @@ public class ShoppingController {
 
         if (!baskets.containsKey(user)) baskets.put(user, new ShoppingBasket());
 
-
         // Redirect to the cart page, with the session-cookie-setting headers.
         System.out.println(headers);
         return ResponseEntity.status(HttpStatus.FOUND).headers(headers).location(URI.create("/cart")).build();
     }
 
+    @PostMapping("/updateCount")
+    public ResponseEntity<String> updateCount(@ModelAttribute ShoppingBasket basket, @RequestParam Map<String,Integer> request) {        // Iterate through the items in the basket and update their quantities
+        for (Map.Entry<String, Integer> entry : basket.getItems()) {
+            String itemName = entry.getKey();
+            System.out.println(itemName);
+            System.out.println(request.get(itemName));
+//            Integer newQuantity = Integer.valueOf(request.getParameter(itemName));
+//            basket.addItem(itemName, newQuantity);
+        }
+        System.out.println(request);
+        // Return the updated cart page
+        return ResponseEntity.status(HttpStatus.OK).location(URI.create("/cart")).build();
+    }
+
     @GetMapping("/cart")
-    public ResponseEntity<String> cart(@CookieValue(value = "session", defaultValue = "") String sessionToken) {
+    public String cart(@CookieValue(value = "session", defaultValue = "") String sessionToken, Model model) {
         if (!sessions.containsKey(sessionToken)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorised.\n");
+            return "Unauthorised";
         }
 
+        // to get each user's cart
         String user = sessions.get(sessionToken);
-        ShoppingBasket tt = baskets.get(user);
+        ShoppingBasket basket = baskets.get(user);
 
-        String display = "";
-        return ResponseEntity.status(HttpStatus.OK).body("[" + counter + "]");
+        model.addAttribute("user", user);
+        model.addAttribute("basket", basket);
+
+        return "cart";
     }
 
     @GetMapping("/counter")
