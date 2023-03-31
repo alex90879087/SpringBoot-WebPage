@@ -32,6 +32,13 @@ public class ShoppingBasket {
         this.values.put("banana", 4.95);
     }
 
+    public void addNewItem(String item, double values) {
+        if (this.items.containsKey(item)) {
+            this.items.put(item, 0);
+        }
+        this.values.put(item, values);
+    }
+
     /**
     * Adds an item to the shopping basket.
      *

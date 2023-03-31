@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Cart</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" th:href="@{css/general.css}" />
+</head>
+<body>
+
+<form action="/newchook" method="post">
+    <label for="Name">Name: </label>
+    <input type="text" id="name" name="name" />
+
+    <label for="Quantity">Power Level: </label>
+    <input type="number" id="Quantity" name="Quantity" />
+
+    <button type="submit">Add!</button>
+</form>
+
+</body>
+</html>

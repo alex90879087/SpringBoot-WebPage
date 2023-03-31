@@ -1,4 +1,4 @@
-ㄌpackage au.edu.sydney.soft3202.task1;
+package au.edu.sydney.soft3202.task1;
 
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;

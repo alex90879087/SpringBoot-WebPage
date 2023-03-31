@@ -14,20 +14,21 @@ table, th, td {
 <form action="/updateCount" method="post">
     <h1 th:text="${user} + ' cart'"></h1>
     <table>
-    <tr>
-        <th>Item</th>
-        <th>Quantity</th>
-        <th>Update Quantity</th>
-    </tr>
-    <tbody>
-    <tr th:each = "entry : ${basket.getItems()}">
-        <td th:text = "${entry.getKey()}"></td>
-        <td th:text = "${entry.getValue()}"></td>
-        <td><input type="text" th:name="${entry.getKey()}"  /></td>
-    </tr>
-    </tbody>
+        <tr>
+            <th>Item</th>
+            <th>Quantity</th>
+            <th>Update Quantity</th>
+        </tr>
+        <tbody>
+        <tr th:each = "entry : ${basket.getItems()}">
+            <td th:text = "${entry.getKey()}"></td>
+            <td th:text = "${entry.getValue()}"></td>
+            <td><input type="text" th:name="${entry.getKey()}"  /></td>
+        </tr>
+        </tbody>
     </table>
     <button type="submit">Update</button>
+    <a href="url">Add new item!</a>
 </form>
 </body>
 </html>

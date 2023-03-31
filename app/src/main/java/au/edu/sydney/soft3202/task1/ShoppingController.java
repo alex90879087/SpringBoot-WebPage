@@ -84,6 +84,24 @@ public class ShoppingController {
         return "redirect:/cart";
     }
 
+    //@RequestParam(value = "coop", defaultValue = "ChookTown") String coopName,
+    //            // @RequestParams here are being used for both query strings and form data,
+    //            // for different solution can also have a look at
+    //            // https://spring.io/guides/gs/handling-form-submission/
+    //            @RequestParam(value = "name") String name,
+    //            @RequestParam(value = "powerlevel") int powerLevel,
+    //            @RequestParam(value = "favfood") String fav,
+    //            @RequestParam(value = "imgpath") String imgPath
+
+    @PostMapping("addItem")
+    public String addItem(
+            @RequestParam(value = "name") String name,
+            @RequestParam(value = "quantity") int quantity
+    ) {
+
+        return null;
+    }
+
     @GetMapping("/cart")
     public String cart(@CookieValue(value = "session", defaultValue = "") String sessionToken, Model model) {
         if (!sessions.containsKey(sessionToken)) {
