@@ -26,6 +26,8 @@ public class ShoppingController {
 
     Map<String, String> sessions = new HashMap<>();
 
+    String currentUser;
+
     String[] users = {"A", "B", "C", "D", "E"};
 
     Map<String, ShoppingBasket> baskets = new HashMap<>();
@@ -46,6 +48,7 @@ public class ShoppingController {
 
         // Store the association of the session token with the user.
         sessions.put(sessionToken, user);
+        currentUser = user;
 
         // Create HTTP headers including the instruction for the browser to store the session token in a cookie.
         String setCookieHeaderValue = String.format("session=%s; Path=/; HttpOnly; SameSite=Strict;", sessionToken);
@@ -60,17 +63,25 @@ public class ShoppingController {
     }
 
     @PostMapping("/updateCount")
-    public ResponseEntity<String> updateCount(@ModelAttribute ShoppingBasket basket, @RequestParam Map<String,Integer> request) {        // Iterate through the items in the basket and update their quantities
+    public String updateQuantity(@RequestParam Map<String,String> request) {        // Iterate through the items in the basket and update their quantities
+        ShoppingBasket basket = baskets.get(currentUser);
         for (Map.Entry<String, Integer> entry : basket.getItems()) {
-            String itemName = entry.getKey();
-            System.out.println(itemName);
-            System.out.println(request.get(itemName));
-//            Integer newQuantity = Integer.valueOf(request.getParameter(itemName));
-//            basket.addItem(itemName, newQuantity);
+            String item = entry.getKey();
+            Integer quantity = entry.getValue();
+            if (request.get(item).length() != 0) {
+                System.out.println(item);
+                Integer newQuantity = Integer.valueOf(request.get(item));
+                if (newQuantity == 0) basket.removeItem(item, quantity);
+                else {
+                    if (quantity >= 1) {
+                        basket.removeItem(item, quantity);
+                    }
+                    basket.addItem(item, newQuantity);
+                }
+            }
         }
-        System.out.println(request);
-        // Return the updated cart page
-        return ResponseEntity.status(HttpStatus.OK).location(URI.create("/cart")).build();
+
+        return "redirect:/cart";
     }
 
     @GetMapping("/cart")
@@ -78,11 +89,10 @@ public class ShoppingController {
         if (!sessions.containsKey(sessionToken)) {
             return "Unauthorised";
         }
-
         // to get each user's cart
         String user = sessions.get(sessionToken);
         ShoppingBasket basket = baskets.get(user);
-
+        System.out.println(basket.getValue());
         model.addAttribute("user", user);
         model.addAttribute("basket", basket);
 
