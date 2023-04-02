@@ -83,7 +83,6 @@ public class ShoppingController {
 
     @GetMapping("/toAddNewItem")
     public String toAddNewItem() {
-
         return "newname";
     }
 
@@ -92,6 +91,24 @@ public class ShoppingController {
         ShoppingBasket basket = baskets.get(currentUser);
         model.addAttribute("basket", basket);
         return "delname";
+    }
+    @GetMapping("/toUpdateItem")
+    public String toUpdateItem() {
+        return "updatename";
+    }
+
+    @PostMapping("updateItem")
+    public String updateItem(@RequestParam(value = "name") Map<String, String> name,
+                             @RequestParam(value = "price") Map<String, String> price) {
+        ShoppingBasket basket = baskets.get(currentUser);
+        List<Map.Entry<String, Integer>> items = basket.getItems();
+        for (Map.Entry<String, Integer> entry : items) {
+            String item = entry.getKey();
+            Integer quantity = entry.getValue();
+        }
+
+
+        return "redirect:/cart";
     }
 
     @PostMapping("deleteItem")
@@ -104,14 +121,11 @@ public class ShoppingController {
     }
 
     @PostMapping("/addNewItem")
-    public String addNewItem(
-            @RequestParam(value = "name") String name,
-            @RequestParam(value = "price") String price
-    ) {
+    public String addNewItem(@RequestParam(value = "name") String name,
+                             @RequestParam(value = "price") String price) {
 
         ShoppingBasket basket = baskets.get(currentUser);
         basket.addNewItem(name, Double.parseDouble(price));
-        System.out.println(basket.items);
 
         return "redirect:/cart";
     }

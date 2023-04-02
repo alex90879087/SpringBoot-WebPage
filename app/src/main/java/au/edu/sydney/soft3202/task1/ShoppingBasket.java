@@ -106,6 +106,7 @@ public class ShoppingBasket {
         System.out.println(items);
     }
 
+
     /**
     * Gets the contents of the ShoppingBasket.
     *
