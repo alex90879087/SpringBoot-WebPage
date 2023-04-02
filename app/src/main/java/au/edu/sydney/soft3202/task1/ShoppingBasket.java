@@ -97,6 +97,15 @@ public class ShoppingBasket {
         return true;
     }
 
+    public void deleteItem(String item) throws IllegalArgumentException {
+        if (item == null) throw new IllegalArgumentException("Item is invalid");
+        String stringItem = item.toLowerCase();
+        this.values.remove(stringItem);
+        this.items.remove(stringItem);
+        System.out.println(values);
+        System.out.println(items);
+    }
+
     /**
     * Gets the contents of the ShoppingBasket.
     *

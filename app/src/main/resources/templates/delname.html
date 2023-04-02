@@ -8,7 +8,7 @@
 <body>
 <form action="/deleteItem" method = "post">
     <tr th:each = "entry : ${basket.getItemsValues()}">
-        <td><input type="checkbox" id=entry.getKey() name=entry.getKey() value=entry.getKey()  ></td>
+        <td><input type="checkbox" th:id=${entry.getKey()} name=checkboxes th:value=${entry.getKey()}  ></td>
         <td th:text = "${entry.getKey()}"></td>
         <td th:text = "${entry.getValue()}"></td>
         <br/><br/>

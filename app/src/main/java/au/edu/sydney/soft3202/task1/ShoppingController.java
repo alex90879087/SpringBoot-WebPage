@@ -95,8 +95,11 @@ public class ShoppingController {
     }
 
     @PostMapping("deleteItem")
-    public String deleteItem(@RequestParam("present") List<String> checkBox) {
+    public String deleteItem(@RequestParam("checkboxes") List<String> checkBox) {
         ShoppingBasket basket = baskets.get(currentUser);
+        for (int i = 0; i < checkBox.size(); i ++) {
+            basket.deleteItem(checkBox.get(i));
+        }
         return "redirect:/cart";
     }
 
