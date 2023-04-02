@@ -5,11 +5,6 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" th:href="@{css/general.css}" />
 </head>
-<style>
-table, th, td {
-  border:1px solid black;
-}
-</style>
 <body>
 <form action="/updateCount" method="post">
     <h1 th:text="${user} + ' cart'"></h1>
@@ -28,8 +23,26 @@ table, th, td {
         </tbody>
     </table>
     <button type="submit">Update</button>
-    <a href="url">Add new item!</a>
+    <br/>
+    <br/>
+    <a th:href="@{/toAddNewItem}">Add new item!</a><br/>
+    <br/>
+    <br/>
+    <a th:href="@{/toDeleteItem}">Delete item!</a>
 </form>
+
+<!--<form action="/updateName" method = "post">-->
+<!--    <tr th:each = "entry : $basket.getItems()}">-->
+<!--        <td><input type="checkbox" id=entry.getKey() name=entry.getKey() value=entry.getKey()  ></td>-->
+<!--        <td th:text = "${entry.getKey()}"></td>-->
+<!--        <td th:text = "${entry.getValue()}"></td>-->
+<!--    <tr/>-->
+<!--    <br/>-->
+<!--    <br/>-->
+<!--    <br/>-->
+<!--    <input type="submit" value="Submit">-->
+<!--</form>-->
+
 </body>
 </html>
 

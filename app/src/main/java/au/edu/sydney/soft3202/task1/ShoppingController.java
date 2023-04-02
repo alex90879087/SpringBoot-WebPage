@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.security.SecureRandom;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HexFormat;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
@@ -58,18 +55,19 @@ public class ShoppingController {
         if (!baskets.containsKey(user)) baskets.put(user, new ShoppingBasket());
 
         // Redirect to the cart page, with the session-cookie-setting headers.
-        System.out.println(headers);
         return ResponseEntity.status(HttpStatus.FOUND).headers(headers).location(URI.create("/cart")).build();
     }
 
     @PostMapping("/updateCount")
     public String updateQuantity(@RequestParam Map<String,String> request) {        // Iterate through the items in the basket and update their quantities
         ShoppingBasket basket = baskets.get(currentUser);
-        for (Map.Entry<String, Integer> entry : basket.getItems()) {
+        List<Map.Entry<String, Integer>> items = basket.getItems();
+
+        for (Map.Entry<String, Integer> entry : items) {
             String item = entry.getKey();
             Integer quantity = entry.getValue();
             if (request.get(item).length() != 0) {
-                System.out.println(item);
+                System.out.println(request.keySet());
                 Integer newQuantity = Integer.valueOf(request.get(item));
                 if (newQuantity == 0) basket.removeItem(item, quantity);
                 else {
@@ -80,26 +78,39 @@ public class ShoppingController {
                 }
             }
         }
-
         return "redirect:/cart";
     }
 
-    //@RequestParam(value = "coop", defaultValue = "ChookTown") String coopName,
-    //            // @RequestParams here are being used for both query strings and form data,
-    //            // for different solution can also have a look at
-    //            // https://spring.io/guides/gs/handling-form-submission/
-    //            @RequestParam(value = "name") String name,
-    //            @RequestParam(value = "powerlevel") int powerLevel,
-    //            @RequestParam(value = "favfood") String fav,
-    //            @RequestParam(value = "imgpath") String imgPath
+    @GetMapping("/toAddNewItem")
+    public String toAddNewItem() {
 
-    @PostMapping("addItem")
-    public String addItem(
+        return "newname";
+    }
+
+    @GetMapping("/toDeleteItem")
+    public String toDeleteItem(Model model) {
+        ShoppingBasket basket = baskets.get(currentUser);
+        model.addAttribute("basket", basket);
+        return "delname";
+    }
+
+    @PostMapping("deleteItem")
+    public String deleteItem(@RequestParam("present") List<String> checkBox) {
+        ShoppingBasket basket = baskets.get(currentUser);
+        return "redirect:/cart";
+    }
+
+    @PostMapping("/addNewItem")
+    public String addNewItem(
             @RequestParam(value = "name") String name,
-            @RequestParam(value = "quantity") int quantity
+            @RequestParam(value = "price") String price
     ) {
 
-        return null;
+        ShoppingBasket basket = baskets.get(currentUser);
+        basket.addNewItem(name, Double.parseDouble(price));
+        System.out.println(basket.items);
+
+        return "redirect:/cart";
     }
 
     @GetMapping("/cart")
@@ -107,10 +118,10 @@ public class ShoppingController {
         if (!sessions.containsKey(sessionToken)) {
             return "Unauthorised";
         }
-        // to get each user's cart
+        // to get current user's cart
         String user = sessions.get(sessionToken);
         ShoppingBasket basket = baskets.get(user);
-        System.out.println(basket.getValue());
+
         model.addAttribute("user", user);
         model.addAttribute("basket", basket);
 
