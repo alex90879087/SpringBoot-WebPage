@@ -85,7 +85,6 @@ public class ShoppingController {
     public String toAddNewItem() {
         return "newname";
     }
-
     @GetMapping("/toDeleteItem")
     public String toDeleteItem(Model model) {
         ShoppingBasket basket = baskets.get(currentUser);
@@ -98,9 +97,15 @@ public class ShoppingController {
         model.addAttribute("basket", basket);
         return "updatename";
     }
+    @GetMapping("/toLogOut")
+    public String toLogOut(Model model) {
+        // removing session token
+        sessions.clear();
+        return "index";
+    }
 
     @PostMapping("updateItem")
-    public String updateItem(@RequestParam Map<String,String> request) {
+    public String updateItem(@RequestParam(defaultValue = "") Map<String,String> request) {
         System.out.println(request);
         ShoppingBasket basket = baskets.get(currentUser);
         List<Map.Entry<String, Integer>> items = basket.getItems();
