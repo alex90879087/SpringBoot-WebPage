@@ -7,17 +7,29 @@
 </head>
 <body>
 <form action="/updateItem" method = "post">
-    <tr th:each = "entry : ${basket.getItemsValues()}">
-        <td th:text = "${entry.getKey()}"></td>
-        <td th:text = "${entry.getValue()}"></td>
-        <br/><br/>
-        <label for="name">New name: </label>
-        <input type="text" id="name" th:name="${entry.getKey()}" />
-        <label for="price">New price: </label>
-        <input type="text" id="price" th:name="${entry.getKey()}" />
-
-    <tr/>
+    <table>
+        <tr>
+            <th>Item</th>
+            <th>New Name</th>
+            <th>New Price</th>
+        </tr>
+        <tbody>
+        <tr th:each = "entry : ${basket.getItemsValues()}">
+            <td th:text = "${entry.getKey()}"></td>
+            <td th:text = "${entry.getValue()}"></td>
+<!--            <td><label for="name">New name: </label></td>-->
+            <td><input type="text" th:name="${entry.getKey()}" /></td>
+<!--            <td><input type="text" id="name" name="name" /></td>-->
+<!--            <td><input type="text" name="name" /></td>-->
+<!--            <td><label for="price">New price: </label></td>-->
+                <td><input type="text" id="price" th:name="${entry.getKey()} + price" /></td>
+<!--            <td><input type="text" id="price" name="price" /></td>-->
+<!--            <td><input type="text" name="price" /></td>-->
+            <br/><br/>
+        </tr>
+        </tbody>
+    </table>
     <br/>
-    <input type="submit" value="Delete!">
+    <input type="submit" value="Update!">
 </form>
 </body>

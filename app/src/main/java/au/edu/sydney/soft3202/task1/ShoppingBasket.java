@@ -29,26 +29,15 @@ public class ShoppingBasket {
         this.values.put("banana", 4.95);
     }
 
-
-    // need to clarify if it is case-sensitive
-    public void addNewItem(String item, double values) {
-
-        if (values < 0) throw new IllegalArgumentException("Item " + item + " cannot have negative price!");
-        item = item.toLowerCase(Locale.ROOT);
-
-        if (this.items.containsKey(item)) {
-            this.items.put(item, 0);
-        }
-        this.items.put(item, 0);
-        this.values.put(item, values);
-    }
-
     public static void main(String[] args) {
         ShoppingBasket sut = new ShoppingBasket();
         sut.addNewItem("new", 25);
         sut.addItem("new", 2);
         System.out.println(sut.getValue());
         System.out.println(sut.getItems().get(0));
+
+        System.out.println(sut.getItemsValues());
+
     }
 
     /**
@@ -97,16 +86,6 @@ public class ShoppingBasket {
         return true;
     }
 
-    public void deleteItem(String item) throws IllegalArgumentException {
-        if (item == null) throw new IllegalArgumentException("Item is invalid");
-        String stringItem = item.toLowerCase();
-        this.values.remove(stringItem);
-        this.items.remove(stringItem);
-        System.out.println(values);
-        System.out.println(items);
-    }
-
-
     /**
     * Gets the contents of the ShoppingBasket.
     *
@@ -126,10 +105,6 @@ public class ShoppingBasket {
         return copyItems;
     }
 
-
-    public List<Entry<String, Double>> getItemsValues() {
-        return new ArrayList<>(this.values.entrySet());
-    }
 
     /**
     * Gets the current dollar value of the ShoppingBasket based on the following values: Apples: $2.50, Oranges: $1.25, Pears: $3.00, Bananas: $4.95
@@ -154,6 +129,53 @@ public class ShoppingBasket {
         for (String name: names) {
             this.items.put(name, 0);
         }
+    }
+
+    // new method
+    public List<Entry<String, Double>> getItemsValues() {
+        return new ArrayList<>(this.values.entrySet());
+    }
+
+    // need to clarify if it is case-sensitive
+    public void addNewItem(String item, double values) {
+
+        if (values < 0) throw new IllegalArgumentException("Item " + item + " cannot have negative price!");
+        item = item.toLowerCase(Locale.ROOT);
+
+        if (this.items.containsKey(item)) {
+            this.items.put(item, 0);
+        }
+        this.items.put(item, 0);
+        this.values.put(item, values);
+    }
+
+    public void deleteItem(String item) throws IllegalArgumentException {
+        if (item == null) throw new IllegalArgumentException("Item is invalid");
+        String stringItem = item.toLowerCase();
+        this.values.remove(stringItem);
+        this.items.remove(stringItem);
+        System.out.println(values);
+        System.out.println(items);
+    }
+
+    public void updateName(String oldName, String newName) {
+        if (oldName == null || oldName.length() == 0 ||
+            !values.containsKey(oldName) || newName == null || newName.length() == 0) throw new IllegalArgumentException("Item is invalid");
+
+        int count = items.get(oldName);
+        items.remove(oldName);
+        items.put(newName, count);
+
+        double value = values.get(oldName);
+        values.remove(oldName);
+        values.put(newName, value);
+    }
+
+    public void updateCost(String item, double newCost) {
+        if (item == null || item.length() == 0 || !values.containsKey(item)) throw new IllegalArgumentException("Item is invalid");
+
+        values.remove(item);
+        values.put(item, newCost);
     }
 
 }

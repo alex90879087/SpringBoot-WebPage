@@ -93,21 +93,37 @@ public class ShoppingController {
         return "delname";
     }
     @GetMapping("/toUpdateItem")
-    public String toUpdateItem() {
+    public String toUpdateItem(Model model) {
+        ShoppingBasket basket = baskets.get(currentUser);
+        model.addAttribute("basket", basket);
         return "updatename";
     }
 
     @PostMapping("updateItem")
-    public String updateItem(@RequestParam(value = "name") Map<String, String> name,
-                             @RequestParam(value = "price") Map<String, String> price) {
+    public String updateItem(@RequestParam Map<String,String> request) {
+        System.out.println(request);
         ShoppingBasket basket = baskets.get(currentUser);
         List<Map.Entry<String, Integer>> items = basket.getItems();
         for (Map.Entry<String, Integer> entry : items) {
-            String item = entry.getKey();
-            Integer quantity = entry.getValue();
+            String item = entry.getKey().toLowerCase(Locale.ROOT);
+
+            // check and update price first
+            String priceKey = item + "price";
+            if (request.containsKey(priceKey)){
+//                System.out.println("price key is " + priceKey);
+                if (request.get(priceKey) != null && request.get(priceKey).length() != 0) {
+                    basket.updateCost(item, Double.parseDouble(request.get(priceKey)));
+                }
+
+                // then update name in case of old name not appearing
+                if (request.containsKey(item)) {
+//                    System.out.println("item name is " + item);
+                    if (request.get(item) != null && request.get(item).length() != 0) {
+                        basket.updateName(item, request.get(item));
+                    }
+                }
+            }
         }
-
-
         return "redirect:/cart";
     }
 
@@ -154,14 +170,14 @@ public class ShoppingController {
     @GetMapping("/cost")
     public ResponseEntity<String> cost() {
         return ResponseEntity.status(HttpStatus.OK).body(
-            shoppingBasket.getValue() == null ? "0" : shoppingBasket.getValue().toString()
+                shoppingBasket.getValue() == null ? "0" : shoppingBasket.getValue().toString()
         );
     }
 
     @GetMapping("/greeting")
     public String greeting(
-        @RequestParam(name="name", required=false, defaultValue="World") String name,
-        Model model
+            @RequestParam(name="name", required=false, defaultValue="World") String name,
+            Model model
     ) {
         model.addAttribute("name", name);
         return "greeting";
