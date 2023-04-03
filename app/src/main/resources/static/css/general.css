@@ -39,3 +39,8 @@ table tbody td:first-child  {
 img {
     height: 7em;
 }
+
+input[type="text"]
+{
+    width:80px
+}
