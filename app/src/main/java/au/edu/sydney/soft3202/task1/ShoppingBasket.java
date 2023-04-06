@@ -178,4 +178,8 @@ public class ShoppingBasket {
         values.put(item, newCost);
     }
 
+    public List<String> getLsOfItems() {
+        return new ArrayList<>(this.items.keySet());
+    }
+
 }

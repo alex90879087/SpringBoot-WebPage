@@ -135,8 +135,10 @@ public class ShoppingController {
     @PostMapping("deleteItem")
     public String deleteItem(@RequestParam("checkboxes") List<String> checkBox) {
         ShoppingBasket basket = baskets.get(currentUser);
-        for (int i = 0; i < checkBox.size(); i ++) {
-            basket.deleteItem(checkBox.get(i));
+        List<String> allItems = basket.getLsOfItems();
+        allItems.removeAll(checkBox);
+        for (int i = 0; i < allItems.size(); i ++) {
+            basket.deleteItem(allItems.get(i));
         }
         return "redirect:/cart";
     }
@@ -153,9 +155,8 @@ public class ShoppingController {
 
     @GetMapping("/cart")
     public String cart(@CookieValue(value = "session", defaultValue = "") String sessionToken, Model model) {
-        if (!sessions.containsKey(sessionToken)) {
-            return "Unauthorised";
-        }
+        if (!sessions.containsKey(sessionToken)) throw new IllegalArgumentException("Invalid User Id");
+//            return "Unauthorised";
         // to get current user's cart
         String user = sessions.get(sessionToken);
         ShoppingBasket basket = baskets.get(user);
@@ -188,4 +189,14 @@ public class ShoppingController {
         return "greeting";
     }
 
+    // Exception Handler
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<String> handleIllegalArgumentException(
+            IllegalArgumentException exception) {
+//        String imagePath = "app/src/main/resources/image/error.gif";
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body("<div style=\"text-align: center\"><h1>" + exception.getMessage() + "</h1></div>" +
+                        "<img src=/image/error.gif style=width:100%; height:100%;/>");}
 }
