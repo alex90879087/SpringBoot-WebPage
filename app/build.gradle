@@ -18,6 +18,9 @@ dependencies {
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
 	testImplementation 'net.jqwik:jqwik:1.7.2'
 	testImplementation 'org.mockito:mockito-core:5.2.0'
+	implementation 'org.openjdk.jmh:jmh-core:1.33'
+	implementation 'org.openjdk.jmh:jmh-generator-annprocess:1.33'
+	jmhAnnotationProcessor 'org.openjdk.jmh:jmh-generator-annprocess:1.33'
 }
 
 test {

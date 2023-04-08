@@ -31,12 +31,9 @@ public class ShoppingBasket {
 
     public static void main(String[] args) {
         ShoppingBasket sut = new ShoppingBasket();
-        sut.addNewItem("new", 25);
-        sut.addItem("new", 2);
+        sut.addNewItem("apple", 5);
+        sut.addItem("apple", 429496730);
         System.out.println(sut.getValue());
-        System.out.println(sut.getItems().get(0));
-
-        System.out.println(sut.getItemsValues());
 
     }
 
@@ -154,8 +151,6 @@ public class ShoppingBasket {
         String stringItem = item.toLowerCase();
         this.values.remove(stringItem);
         this.items.remove(stringItem);
-        System.out.println(values);
-        System.out.println(items);
     }
 
     public void updateName(String oldName, String newName) {
@@ -172,7 +167,7 @@ public class ShoppingBasket {
     }
 
     public void updateCost(String item, double newCost) {
-        if (item == null || item.length() == 0 || !values.containsKey(item)) throw new IllegalArgumentException("Item is invalid");
+        if (item == null || item.length() == 0 || !values.containsKey(item) || newCost <= 0) throw new IllegalArgumentException("Item is invalid");
 
         values.remove(item);
         values.put(item, newCost);
