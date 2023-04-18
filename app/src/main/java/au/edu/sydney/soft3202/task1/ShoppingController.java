@@ -31,7 +31,6 @@ public class ShoppingController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestParam(value = "user", defaultValue = "") String user) {
-
         // We are just checking the username, in the real world you would also check their password here
         // or authenticate the user some other way.
         if (!Arrays.asList(users).contains(user)) {
@@ -59,7 +58,8 @@ public class ShoppingController {
     }
 
     @PostMapping("/updateCount")
-    public String updateQuantity(@RequestParam Map<String,String> request) {        // Iterate through the items in the basket and update their quantities
+    public String updateQuantity(@RequestParam Map<String,String> request) {
+        // Iterate through the items in the basket and update their quantities=
         ShoppingBasket basket = baskets.get(currentUser);
         List<Map.Entry<String, Integer>> items = basket.getItems();
 
@@ -67,7 +67,11 @@ public class ShoppingController {
             String item = entry.getKey();
             Integer quantity = entry.getValue();
             if (request.get(item).length() != 0) {
-                System.out.println(request.keySet());
+                try{
+                    Integer.valueOf(request.get(item));
+                }catch(Exception e) {
+                    throw new IllegalArgumentException("New quantity has to be numbers");
+                }
                 Integer newQuantity = Integer.valueOf(request.get(item));
                 if (newQuantity == 0) basket.removeItem(item, quantity);
                 else {
@@ -106,7 +110,6 @@ public class ShoppingController {
 
     @PostMapping("updateItem")
     public String updateItem(@RequestParam(defaultValue = "") Map<String,String> request) {
-        System.out.println(request);
         ShoppingBasket basket = baskets.get(currentUser);
         List<Map.Entry<String, Integer>> items = basket.getItems();
         for (Map.Entry<String, Integer> entry : items) {
@@ -117,7 +120,11 @@ public class ShoppingController {
             if (request.containsKey(priceKey)){
 //                System.out.println("price key is " + priceKey);
                 if (request.get(priceKey) != null && request.get(priceKey).length() != 0) {
-                    basket.updateCost(item, Double.parseDouble(request.get(priceKey)));
+                    try{
+                        basket.updateCost(item, Double.parseDouble(request.get(priceKey)));
+                    } catch(Exception e) {
+                    throw new IllegalArgumentException("New price has to be numbers");
+                }
                 }
 
                 // then update name in case of old name not appearing
@@ -148,6 +155,14 @@ public class ShoppingController {
                              @RequestParam(value = "price") String price) {
 
         ShoppingBasket basket = baskets.get(currentUser);
+        if (name == "") throw new IllegalArgumentException("Name cannot be empty");
+        if (price == "") throw new IllegalArgumentException("Price cannot be empty");
+        if (name == "" && price == "" ) throw new IllegalArgumentException("Name and price cannot be empty");
+        try{
+            Double.parseDouble(price);
+        }catch(Exception e) {
+            throw new IllegalArgumentException("Price needs to be number");
+        }
         basket.addNewItem(name, Double.parseDouble(price));
 
         return "redirect:/cart";
@@ -156,7 +171,6 @@ public class ShoppingController {
     @GetMapping("/cart")
     public String cart(@CookieValue(value = "session", defaultValue = "") String sessionToken, Model model) {
         if (!sessions.containsKey(sessionToken)) throw new IllegalArgumentException("Invalid User Id");
-//            return "Unauthorised";
         // to get current user's cart
         String user = sessions.get(sessionToken);
         ShoppingBasket basket = baskets.get(user);
@@ -167,34 +181,11 @@ public class ShoppingController {
         return "cart";
     }
 
-    @GetMapping("/counter")
-    public ResponseEntity<String> counter() {
-        counter.incrementAndGet();
-        return ResponseEntity.status(HttpStatus.OK).body("[" + counter + "]");
-    }
-
-    @GetMapping("/cost")
-    public ResponseEntity<String> cost() {
-        return ResponseEntity.status(HttpStatus.OK).body(
-                shoppingBasket.getValue() == null ? "0" : shoppingBasket.getValue().toString()
-        );
-    }
-
-    @GetMapping("/greeting")
-    public String greeting(
-            @RequestParam(name="name", required=false, defaultValue="World") String name,
-            Model model
-    ) {
-        model.addAttribute("name", name);
-        return "greeting";
-    }
-
     // Exception Handler
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<String> handleIllegalArgumentException(
             IllegalArgumentException exception) {
-//        String imagePath = "app/src/main/resources/image/error.gif";
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body("<div style=\"text-align: center\"><h1>" + exception.getMessage() + "</h1></div>" +

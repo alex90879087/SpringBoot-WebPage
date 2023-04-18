@@ -11,10 +11,15 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 public class SampleBenchmark {
 
     private ShoppingBasket sut;
+    private String itemForRemovePurpose = "itemForRemovePurpose";
+    private String itemForRemovePurpose2 = "itemForRemovePurpose2";
 
     @Setup
     public void setUp() {
         sut = new ShoppingBasket();
+        sut.addNewItem(itemForRemovePurpose, 10);
+        sut.addNewItem(itemForRemovePurpose2, 10);
+
     }
 
     // new
@@ -52,13 +57,8 @@ public class SampleBenchmark {
     @Measurement(iterations = 1)
     @Benchmark @BenchmarkMode(Mode.Throughput)
     public void removeNewItems(Blackhole bh) {
-        sut.addNewItem("newItem", 10);
-        sut.addNewItem("newItem2", 10);
-        sut.addNewItem("newItem2", 10);
-
-        sut.deleteItem("newItem");
-        sut.deleteItem("newItem1");
-        sut.deleteItem("newItem3");
+        sut.deleteItem(itemForRemovePurpose);
+        sut.deleteItem(itemForRemovePurpose2);
     }
 
     // add "a" new item, increase 10 and remove "that"

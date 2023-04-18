@@ -18,14 +18,8 @@
         <tr th:each = "entry : ${basket.getItemsValues()}">
             <td th:text = "${entry.getKey()}"></td>
             <td th:text = "${entry.getValue()}"></td>
-<!--            <td><label for="name">New name: </label></td>-->
             <td><input type="text" th:name="${entry.getKey()}" /></td>
-<!--            <td><input type="text" id="name" name="name" /></td>-->
-<!--            <td><input type="text" name="name" /></td>-->
-<!--            <td><label for="price">New price: </label></td>-->
                 <td><input type="text" id="price" th:name="${entry.getKey()} + price" /></td>
-<!--            <td><input type="text" id="price" name="price" /></td>-->
-<!--            <td><input type="text" name="price" /></td>-->
             <br/><br/>
         </tr>
         </tbody>

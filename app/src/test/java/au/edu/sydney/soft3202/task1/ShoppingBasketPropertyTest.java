@@ -18,7 +18,7 @@ public class ShoppingBasketPropertyTest {
 
     @Property
     void getValuePropertyTest(@ForAll  @IntRange(min = 1, max = Integer.MAX_VALUE) int n,
-                                   @ForAll @From("items") String item) {
+                              @ForAll @From("items") String item) {
         ShoppingBasket sut = new ShoppingBasket();
         double price = 5;
         sut.addNewItem(item, price);
@@ -28,7 +28,7 @@ public class ShoppingBasketPropertyTest {
 
     @Property
     void getValueEmptyPropertyTest(@ForAll  @IntRange(min = 1, max = Integer.MAX_VALUE) int n,
-                                        @ForAll @From("items") String item) {
+                                   @ForAll @From("items") String item) {
         ShoppingBasket sut = new ShoppingBasket();
         double price = 5;
         sut.addNewItem(item, price);
@@ -39,7 +39,7 @@ public class ShoppingBasketPropertyTest {
 
     @Property
     void getValueEmptyPropertyTestClear(@ForAll  @IntRange(min = 1, max = Integer.MAX_VALUE) int n,
-                                   @ForAll @From("items") String item) {
+                                        @ForAll @From("items") String item) {
         ShoppingBasket sut = new ShoppingBasket();
         double price = 5;
         sut.addNewItem(item, price);
