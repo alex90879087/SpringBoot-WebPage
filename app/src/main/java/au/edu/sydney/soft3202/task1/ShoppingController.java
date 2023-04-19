@@ -93,7 +93,18 @@ public class ShoppingController {
 
     //
     @PostMapping("/updateUser")
-    public void deleteUser() {}
+    public String deleteUser(@RequestParam("userToDelete") List<String> checkBox) {
+
+        for (String each: checkBox) {
+            try{
+                dbController.removeUser(each);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return "redirect:/users";
+    }
 
 
     @PostMapping("/updateCount")

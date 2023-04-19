@@ -58,6 +58,16 @@ public class DbController {
         }
     }
 
+    public void removeUser(String name) throws SQLException {
+        String sql = "DELETE FROM users where user = (?)";
+        try (PreparedStatement prepStatement = connection.prepareStatement(sql)) {
+            prepStatement.setString(1, name);
+            prepStatement.executeUpdate();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
     public List<String> getUsers() throws SQLException {
         String sql = "SELECT user FROM users";
 
@@ -92,6 +102,9 @@ public class DbController {
         asd.createUserSchema();
         asd.addUser("WW");
         System.out.println(asd.getUser("WW"));
+        asd.removeUser("WW");
+        System.out.println(asd.getUser("WW"));
+
     }
 
 
