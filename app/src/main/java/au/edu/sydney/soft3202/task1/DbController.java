@@ -10,6 +10,12 @@ public class DbController {
     private static final String dbName = "fruitbasket.db";
     private Connection connection;
 
+    public DbController() throws SQLException {
+        this.connect();
+        this.dropUserSchema();
+        this.createUserSchema();
+    }
+
 
     private void connect() throws SQLException {
         try  {
@@ -48,7 +54,7 @@ public class DbController {
             preparedStatement.setString(1, name);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new SQLException("Failed to add user name in DB");
+            e.printStackTrace();
         }
     }
 
@@ -81,8 +87,10 @@ public class DbController {
     }
 
     public static void main(String[] args) throws SQLException {
-        DbController db = new DbController();
-        db.connect();
+        DbController asd = new DbController();
+        asd.dropUserSchema();
+        asd.createUserSchema();
+        asd.addUser("WW");
     }
 
 

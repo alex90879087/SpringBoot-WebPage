@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.security.SecureRandom;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -17,7 +18,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class ShoppingController {
     private final SecureRandom randomNumberGenerator = new SecureRandom();
     private final HexFormat hexFormatter = HexFormat.of();
-
+    private DbController dbController;
     private final AtomicLong counter = new AtomicLong();
     ShoppingBasket shoppingBasket = new ShoppingBasket();
 
@@ -25,7 +26,7 @@ public class ShoppingController {
 
     String currentUser;
 
-    String[] users = {"A", "B", "C", "D", "E"};
+    List<String> users = new ArrayList<>();
 
     Map<String, ShoppingBasket> baskets = new HashMap<>();
 
@@ -33,7 +34,18 @@ public class ShoppingController {
     public ResponseEntity<String> login(@RequestParam(value = "user", defaultValue = "") String user) {
         // We are just checking the username, in the real world you would also check their password here
         // or authenticate the user some other way.
-        if (!Arrays.asList(users).contains(user)) {
+
+        try {
+            dbController = new DbController();
+
+            if (!user.equals("Admin")) {
+                user = dbController.getUser(user);
+            }
+        } catch (SQLException error) {
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("Unable to connect: " + error.getMessage()+ ".\n");
+        }
+
+        if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid user.\n");
         }
 
@@ -56,6 +68,30 @@ public class ShoppingController {
         // Redirect to the cart page, with the session-cookie-setting headers.
         return ResponseEntity.status(HttpStatus.FOUND).headers(headers).location(URI.create("/cart")).build();
     }
+
+    @GetMapping("/toAddNewUser")
+    public String toAddNewUser() {
+        return "addNewUser";
+    }
+
+    @GetMapping("/users")
+    public String toUsers(Model model) throws SQLException {
+        users = dbController.getUsers();
+        model.addAttribute("users", users);
+        return "users";
+    }
+
+    // alphanumeric -> include special character for now
+    @PostMapping("addNewUser")
+    public String addNewUser(@RequestParam(value = "name") String name, Model model) throws SQLException {
+        dbController.addUser(name);
+        return "redirect:/users";
+    }
+
+    //
+    @PostMapping("/updateUser")
+    public void deleteUser() {}
+
 
     @PostMapping("/updateCount")
     public String updateQuantity(@RequestParam Map<String,String> request) {
@@ -123,8 +159,8 @@ public class ShoppingController {
                     try{
                         basket.updateCost(item, Double.parseDouble(request.get(priceKey)));
                     } catch(Exception e) {
-                    throw new IllegalArgumentException("New price has to be numbers");
-                }
+                        throw new IllegalArgumentException("New price has to be numbers");
+                    }
                 }
 
                 // then update name in case of old name not appearing
@@ -171,6 +207,17 @@ public class ShoppingController {
     @GetMapping("/cart")
     public String cart(@CookieValue(value = "session", defaultValue = "") String sessionToken, Model model) {
         if (!sessions.containsKey(sessionToken)) throw new IllegalArgumentException("Invalid User Id");
+
+        if (currentUser.equals("Admin")) {
+            try{
+                dbController.getUsers();
+            } catch (SQLException e) {
+                return "error";
+            }
+            model.addAttribute("users", users);
+
+            return "users";
+        }
         // to get current user's cart
         String user = sessions.get(sessionToken);
         ShoppingBasket basket = baskets.get(user);
