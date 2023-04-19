@@ -91,6 +91,7 @@ public class DbController {
         asd.dropUserSchema();
         asd.createUserSchema();
         asd.addUser("WW");
+        System.out.println(asd.getUser("WW"));
     }
 
 

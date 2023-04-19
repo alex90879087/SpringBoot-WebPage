@@ -18,7 +18,8 @@ import java.util.concurrent.atomic.AtomicLong;
 public class ShoppingController {
     private final SecureRandom randomNumberGenerator = new SecureRandom();
     private final HexFormat hexFormatter = HexFormat.of();
-    private DbController dbController;
+    private DbController dbController = new DbController();
+
     private final AtomicLong counter = new AtomicLong();
     ShoppingBasket shoppingBasket = new ShoppingBasket();
 
@@ -30,14 +31,15 @@ public class ShoppingController {
 
     Map<String, ShoppingBasket> baskets = new HashMap<>();
 
+    public ShoppingController() throws SQLException {
+    }
+
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestParam(value = "user", defaultValue = "") String user) {
         // We are just checking the username, in the real world you would also check their password here
         // or authenticate the user some other way.
 
         try {
-            dbController = new DbController();
-
             if (!user.equals("Admin")) {
                 user = dbController.getUser(user);
             }
@@ -85,6 +87,7 @@ public class ShoppingController {
     @PostMapping("addNewUser")
     public String addNewUser(@RequestParam(value = "name") String name, Model model) throws SQLException {
         dbController.addUser(name);
+        baskets.put(name, new ShoppingBasket());
         return "redirect:/users";
     }
 
