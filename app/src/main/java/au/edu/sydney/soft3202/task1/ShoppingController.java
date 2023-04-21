@@ -1,6 +1,6 @@
 package au.edu.sydney.soft3202.task1;
 
-import jakarta.servlet.http.HttpServletRequest;
+import DatabasController.DbController;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +21,6 @@ public class ShoppingController {
     private DbController dbController = new DbController();
 
     private final AtomicLong counter = new AtomicLong();
-    ShoppingBasket shoppingBasket = new ShoppingBasket();
 
     Map<String, String> sessions = new HashMap<>();
 
@@ -84,7 +83,7 @@ public class ShoppingController {
     }
 
     // alphanumeric -> include special character for now
-    @PostMapping("addNewUser")
+    @PostMapping("/addNewUser")
     public String addNewUser(@RequestParam(value = "name") String name, Model model) throws SQLException {
         dbController.addUser(name);
         baskets.put(name, new ShoppingBasket());

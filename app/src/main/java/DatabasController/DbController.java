@@ -1,6 +1,5 @@
-package au.edu.sydney.soft3202.task1;
+package DatabasController;
 
-import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
