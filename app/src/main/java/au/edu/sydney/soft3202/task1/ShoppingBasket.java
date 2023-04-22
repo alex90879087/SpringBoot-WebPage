@@ -1,5 +1,8 @@
 package au.edu.sydney.soft3202.task1;
 
+import DatabasController.BasketDB;
+
+import java.sql.SQLException;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -10,12 +13,15 @@ public class ShoppingBasket {
 
     HashMap<String, Integer> items;
     HashMap<String, Double> values;
+    String user;
+    BasketDB db = new BasketDB();
     String[] names = {"apple", "orange", "pear", "banana"};
 
     /**
     * Creates a new, empty ShoppingBasket object
     */
-    public ShoppingBasket() {
+    public ShoppingBasket(String user) throws SQLException {
+        this.user = user;
         this.items = new HashMap<>();
         this.values = new HashMap<>();
 
@@ -27,25 +33,30 @@ public class ShoppingBasket {
         this.values.put("orange", 1.25);
         this.values.put("pear", 3.00);
         this.values.put("banana", 4.95);
+
     }
 
-    public static void main(String[] args) {
-        ShoppingBasket sut = new ShoppingBasket();
+    public static void main(String[] args) throws SQLException {
+        ShoppingBasket sut = new ShoppingBasket("A");
         sut.addNewItem("apple", 5);
         sut.addItem("apple", 429496730);
         System.out.println(sut.getValue());
 
     }
 
-    /**
-    * Adds an item to the shopping basket.
-     *
-     * @param item  The item to be added. Must match one of ‘apple’, ‘orange’, ‘pear’, or ‘banana’, in any case.
-     * @param count The count of the item to be added. Must be 1 or more. It
-     * allows only Integer.INT_MAX number of items of a kind to be stored. If
-     * items are added after INT_MAX, the parameter requirements will be breached.
-     * @throws IllegalArgumentException If any parameter requirements are breached.
-     */
+    public void update(String item, double price, int count) {
+
+        if (this.items.containsKey(item)) {
+            this.items.put(item, count);
+            this.values.put(item, price);
+            return;
+        }
+
+        throw new IllegalArgumentException("Error when updating baskets value and quantity");
+
+    }
+
+
     public void addItem(String item, int count) throws IllegalArgumentException {
         if (item == null) throw new IllegalArgumentException("Item is invalid");
         String stringItem = item.toLowerCase();
@@ -57,6 +68,7 @@ public class ShoppingBasket {
         if (itemVal == Integer.MAX_VALUE) throw new IllegalArgumentException("Item " + item + " has reached maximum count.");
 
         this.items.put(stringItem, itemVal + count);
+        this.db.updateQuantity(this.user, item, String.valueOf(count));
     }
 
     /**
@@ -79,7 +91,8 @@ public class ShoppingBasket {
         Integer newVal = itemVal - count;
         if (newVal < 0) return false;
         this.items.put(stringItem, newVal);
-
+        this.db.updateQuantity(this.user, stringItem, String.valueOf(newVal));
+//        this.db.deleteSpecificItem(item, String.valueOf(count));
         return true;
     }
 
@@ -144,6 +157,7 @@ public class ShoppingBasket {
         }
         this.items.put(item, 0);
         this.values.put(item, values);
+        this.db.addItem(user, item, values);
     }
 
     public void deleteItem(String item) throws IllegalArgumentException {
@@ -151,6 +165,7 @@ public class ShoppingBasket {
         String stringItem = item.toLowerCase();
         this.values.remove(stringItem);
         this.items.remove(stringItem);
+        this.db.deleteSpecificItem(user, item);
     }
 
     public void updateName(String oldName, String newName) {
@@ -164,6 +179,7 @@ public class ShoppingBasket {
         double value = values.get(oldName);
         values.remove(oldName);
         values.put(newName, value);
+        this.db.updateName(user, oldName, newName);
     }
 
     public void updateCost(String item, double newCost) {
@@ -171,6 +187,7 @@ public class ShoppingBasket {
 
         values.remove(item);
         values.put(item, newCost);
+        this.db.updatePrice(user, item, String.valueOf(newCost));
     }
 
     public List<String> getLsOfItems() {

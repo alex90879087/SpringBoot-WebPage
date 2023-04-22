@@ -1,5 +1,7 @@
 package DatabasController;
 
+import au.edu.sydney.soft3202.task1.ShoppingBasket;
+
 import javax.xml.transform.Result;
 import java.sql.*;
 
@@ -30,7 +32,7 @@ public class BasketDB {
                 "CREATE TABLE IF NOT EXISTS BASKETS (" +
                         "user TEXT PRIMARY KEY NOT NULL," +
                         "name TEXT NOT NULL," +
-                        "price INT NOT NULL," +
+                        "price REAL NOT NULL," +
                         "quantity INT NOT　NULL)";
 
         try (Statement statement = connection.createStatement()) {
@@ -50,7 +52,7 @@ public class BasketDB {
         }
     }
 
-    public void addItem(String user, String name, int price) {
+    public void addItem(String user, String name, double price) {
         String sql = "INSERT INTO BASKETS VALUES( (?), (?), (?), 5)";
         try (PreparedStatement prepStatement = connection.prepareStatement(sql)) {
             prepStatement.setString(1, user);
@@ -82,12 +84,24 @@ public class BasketDB {
         return toReturn;
     }
 
-    public void deleteItem(String user, String name) {
+    public void deleteSpecificItem(String user, String name) {
         String sql = "DELETE FROM BASKETS WHERE USER = (?) AND name = (?)";
 
         try (PreparedStatement prepStatement = connection.prepareStatement(sql)) {
             prepStatement.setString(1, user);
             prepStatement.setString(2, name);
+            int rs = prepStatement.executeUpdate();
+
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteItems(String user) {
+        String sql = "DELETE FROM BASKETS WHERE USER = (?)";
+
+        try (PreparedStatement prepStatement = connection.prepareStatement(sql)) {
+            prepStatement.setString(1, user);
             int rs = prepStatement.executeUpdate();
 
         } catch (SQLException e){
@@ -136,6 +150,27 @@ public class BasketDB {
         } catch (SQLException e){
             e.printStackTrace();
         }
+    }
+
+    public void getItems(ShoppingBasket basket, String user) {
+        String sql = "SELECT *　FROM BASKETS WHERE user = (?)";
+        try (PreparedStatement prepStatement = connection.prepareStatement(sql)) {
+            prepStatement.setString(1, user);
+            ResultSet rs = prepStatement.executeQuery();
+
+            while (rs.next()) {
+                String name = rs.getString("name");
+                Double price = rs.getDouble("price");
+                int quantity = rs.getInt("quantity");
+
+                basket.update(name, price, quantity);
+
+            }
+
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+
     }
 
     public static void main(String[] args) throws SQLException {

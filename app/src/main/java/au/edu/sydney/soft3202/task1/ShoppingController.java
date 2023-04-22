@@ -1,5 +1,6 @@
 package au.edu.sydney.soft3202.task1;
 
+import DatabasController.BasketDB;
 import DatabasController.DbController;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ public class ShoppingController {
     private final SecureRandom randomNumberGenerator = new SecureRandom();
     private final HexFormat hexFormatter = HexFormat.of();
     private DbController dbController = new DbController();
+    private BasketDB basketDbController = new BasketDB();
 
     private final AtomicLong counter = new AtomicLong();
 
@@ -34,7 +36,7 @@ public class ShoppingController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestParam(value = "user", defaultValue = "") String user) {
+    public ResponseEntity<String> login(@RequestParam(value = "user", defaultValue = "") String user) throws SQLException {
         // We are just checking the username, in the real world you would also check their password here
         // or authenticate the user some other way.
 
@@ -64,7 +66,7 @@ public class ShoppingController {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Set-Cookie", setCookieHeaderValue);
 
-        if (!baskets.containsKey(user)) baskets.put(user, new ShoppingBasket());
+//        if (!baskets.containsKey(user)) baskets.put(user, new ShoppingBasket(user));
 
         // Redirect to the cart page, with the session-cookie-setting headers.
         return ResponseEntity.status(HttpStatus.FOUND).headers(headers).location(URI.create("/cart")).build();
@@ -86,7 +88,12 @@ public class ShoppingController {
     @PostMapping("/addNewUser")
     public String addNewUser(@RequestParam(value = "name") String name, Model model) throws SQLException {
         dbController.addUser(name);
-        baskets.put(name, new ShoppingBasket());
+        baskets.put(name, new ShoppingBasket(currentUser));
+        basketDbController.addItem(name, "apple", 2.5);
+        basketDbController.addItem(name, "orange", 1.25);
+        basketDbController.addItem(name, "pear", 3.00);
+        basketDbController.addItem(name, "banana", 4.95);
+
         return "redirect:/users";
     }
 
@@ -97,6 +104,7 @@ public class ShoppingController {
         for (String each: checkBox) {
             try{
                 dbController.removeUser(each);
+                basketDbController.deleteItems(this.currentUser);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
