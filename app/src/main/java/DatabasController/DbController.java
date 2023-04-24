@@ -11,7 +11,7 @@ public class DbController {
 
     public DbController() throws SQLException {
         this.connect();
-        this.dropUserSchema();
+//        this.dropUserSchema();
         this.createUserSchema();
     }
 
@@ -29,7 +29,7 @@ public class DbController {
 
     private void createUserSchema() throws SQLException {
         String sql =
-                "CREATE TABLE IF NOT EXISTS users (user TEXT PRIMARY KEY NOT NULL)";
+                "CREATE TABLE IF NOT EXISTS users (user TEXT NOT NULL)";
         try (Statement statement = connection.createStatement()) {
             statement.execute(sql);
         } catch (SQLException e){
@@ -94,6 +94,20 @@ public class DbController {
         }
         return null;
     }
+
+//    public List<String> getUsers() throws SQLException {
+//        List<String> toReturn = new ArrayList<>();
+//        String sql = "SELECT * FROM users";
+//
+//        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+//        ResultSet resultSet = preparedStatement.executeQuery();
+//
+//        while (resultSet.next()) {
+//            String user = resultSet.getString("user");
+//            toReturn.add(user);
+//        }
+//        return toReturn;
+//    }
 
     public static void main(String[] args) throws SQLException {
         DbController asd = new DbController();

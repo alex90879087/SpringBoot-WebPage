@@ -14,7 +14,7 @@ public class ShoppingBasket {
     HashMap<String, Integer> items;
     HashMap<String, Double> values;
     String user;
-    BasketDB db = new BasketDB();
+//    BasketDB db = new BasketDB();
     String[] names = {"apple", "orange", "pear", "banana"};
 
     /**
@@ -24,7 +24,16 @@ public class ShoppingBasket {
         this.user = user;
         this.items = new HashMap<>();
         this.values = new HashMap<>();
+    }
 
+//    public static void main(String[] args) throws SQLException {
+//        ShoppingBasket sut = new ShoppingBasket("A");
+//        sut.addNewItem("apple", 5);
+//        sut.addItem("apple", 429496730);
+//        System.out.println(sut.getValue());
+//    }
+
+    public void initialise() {
         for (String name: names) {
             this.items.put(name, 0);
         }
@@ -34,27 +43,23 @@ public class ShoppingBasket {
         this.values.put("pear", 3.00);
         this.values.put("banana", 4.95);
 
-    }
-
-    public static void main(String[] args) throws SQLException {
-        ShoppingBasket sut = new ShoppingBasket("A");
-        sut.addNewItem("apple", 5);
-        sut.addItem("apple", 429496730);
-        System.out.println(sut.getValue());
-
+        // 0 count when adding new items
+        this.addNewItem("apple", 2.5);
+        this.addNewItem("orange", 1.25);
+        this.addNewItem("pear", 3.00);
+        this.addNewItem("banana", 4.95);
     }
 
     public void update(String item, double price, int count) {
 
-        if (this.items.containsKey(item)) {
-            this.items.put(item, count);
-            this.values.put(item, price);
-            return;
-        }
-
-        throw new IllegalArgumentException("Error when updating baskets value and quantity");
-
+//        if (this.items.containsKey(item)) {
+        this.items.put(item, count);
+        this.values.put(item, price);
+        return;
+//        }
     }
+//        throw new IllegalArgumentException("Error when updating baskets value and quantity");
+
 
 
     public void addItem(String item, int count) throws IllegalArgumentException {
@@ -68,7 +73,7 @@ public class ShoppingBasket {
         if (itemVal == Integer.MAX_VALUE) throw new IllegalArgumentException("Item " + item + " has reached maximum count.");
 
         this.items.put(stringItem, itemVal + count);
-        this.db.updateQuantity(this.user, item, String.valueOf(count));
+//        this.db.updateQuantity(this.user, item, String.valueOf(count));
     }
 
     /**
@@ -91,7 +96,7 @@ public class ShoppingBasket {
         Integer newVal = itemVal - count;
         if (newVal < 0) return false;
         this.items.put(stringItem, newVal);
-        this.db.updateQuantity(this.user, stringItem, String.valueOf(newVal));
+//        this.db.updateQuantity(this.user, stringItem, String.valueOf(newVal));
 //        this.db.deleteSpecificItem(item, String.valueOf(count));
         return true;
     }
@@ -157,7 +162,7 @@ public class ShoppingBasket {
         }
         this.items.put(item, 0);
         this.values.put(item, values);
-        this.db.addItem(user, item, values);
+//        this.db.addItem(user, item, values);
     }
 
     public void deleteItem(String item) throws IllegalArgumentException {
@@ -165,7 +170,7 @@ public class ShoppingBasket {
         String stringItem = item.toLowerCase();
         this.values.remove(stringItem);
         this.items.remove(stringItem);
-        this.db.deleteSpecificItem(user, item);
+//        this.db.deleteSpecificItem(user, item);
     }
 
     public void updateName(String oldName, String newName) {
@@ -179,7 +184,7 @@ public class ShoppingBasket {
         double value = values.get(oldName);
         values.remove(oldName);
         values.put(newName, value);
-        this.db.updateName(user, oldName, newName);
+//        this.db.updateName(user, oldName, newName);
     }
 
     public void updateCost(String item, double newCost) {
@@ -187,7 +192,7 @@ public class ShoppingBasket {
 
         values.remove(item);
         values.put(item, newCost);
-        this.db.updatePrice(user, item, String.valueOf(newCost));
+//        this.db.updatePrice(user, item, String.valueOf(newCost));
     }
 
     public List<String> getLsOfItems() {
