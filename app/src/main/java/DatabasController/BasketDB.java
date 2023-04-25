@@ -31,7 +31,7 @@ public class BasketDB {
         String sql =
                 "CREATE TABLE IF NOT EXISTS BASKETS (" +
                         "user TEXT NOT NULL," +
-                        "name TEXT NOT NULL," +
+                        "item TEXT NOT NULL," +
                         "price REAL NOT NULL," +
                         "quantity INT NOT　NULL)";
 
@@ -61,7 +61,7 @@ public class BasketDB {
     }
 
     public void addItem(String user, String name, double price) {
-        String sql = "INSERT INTO BASKETS (user, name, price, quantity) VALUES((?), (?), (?), 0)";
+        String sql = "INSERT INTO BASKETS (user, item, price, quantity) VALUES((?), (?), (?), 0)";
         try (PreparedStatement prepStatement = connection.prepareStatement(sql)) {
             prepStatement.setString(1, user);
             prepStatement.setString(2, name);
@@ -77,9 +77,9 @@ public class BasketDB {
     // price and quantity
     public double[] getItemData(String user, String name) {
         double[] toReturn = new double[2];
-        String sqlPrice = "SELECT PRICE FROM BASKETS WHERE USER = (?) AND NAME = (?)";
-        String sqlQuantity = "SELECT QUANTITY FROM BASKETS WHERE USER = (?) AND NAME = (?)" ;
-        String sqlPriceAndQuantity = "SELECT PRICE, QUANTITY FROM BASKETS WHERE USER = (?) AND NAME = (?)";
+        String sqlPrice = "SELECT PRICE FROM BASKETS WHERE USER = (?) AND ITEM = (?)";
+        String sqlQuantity = "SELECT QUANTITY FROM BASKETS WHERE USER = (?) AND ITEM = (?)" ;
+        String sqlPriceAndQuantity = "SELECT PRICE, QUANTITY FROM BASKETS WHERE USER = (?) AND ITEM = (?)";
 
         try (PreparedStatement prepStatement = connection.prepareStatement(sqlPriceAndQuantity)) {
             prepStatement.setString(1, user);
@@ -95,7 +95,7 @@ public class BasketDB {
     }
 
     public void deleteSpecificItem(String user, String name) {
-        String sql = "DELETE FROM BASKETS WHERE USER = (?) AND name = (?)";
+        String sql = "DELETE FROM BASKETS WHERE USER = (?) AND item = (?)";
 
         try (PreparedStatement prepStatement = connection.prepareStatement(sql)) {
             prepStatement.setString(1, user);
@@ -109,18 +109,18 @@ public class BasketDB {
 
     public void deleteItems(String user) {
         String sql = "DELETE FROM BASKETS WHERE USER = (?)";
-
+        System.out.println("user +" + user);
         try (PreparedStatement prepStatement = connection.prepareStatement(sql)) {
             prepStatement.setString(1, user);
             int rs = prepStatement.executeUpdate();
-
+            System.out.println(rs);
         } catch (SQLException e){
             e.printStackTrace();
         }
     }
 
     public void updatePrice(String user, String name, String newPrice) {
-        String sql = "UPDATE BASKETS SET PRICE = (?) WHERE user = (?) AND name = (?)";
+        String sql = "UPDATE BASKETS SET PRICE = (?) WHERE user = (?) AND item = (?)";
 
         try (PreparedStatement prepStatement = connection.prepareStatement(sql)) {
             prepStatement.setString(1, newPrice);
@@ -137,7 +137,7 @@ public class BasketDB {
 
 
     public void updateQuantity(String user, String name, String newQuantity) {
-        String sql = "UPDATE BASKETS SET QUANTITY = (?) WHERE user = (?) AND name = (?)";
+        String sql = "UPDATE BASKETS SET QUANTITY = (?) WHERE user = (?) AND item = (?)";
 
         try (PreparedStatement prepStatement = connection.prepareStatement(sql)) {
             prepStatement.setString(1, newQuantity);
@@ -153,7 +153,7 @@ public class BasketDB {
     }
 
     public void updateName(String user, String name, String newName) {
-        String sql = "UPDATE BASKETS SET name = (?) WHERE user = (?) AND name = (?)";
+        String sql = "UPDATE BASKETS SET item = (?) WHERE user = (?) AND item = (?)";
 
         try (PreparedStatement prepStatement = connection.prepareStatement(sql)) {
             prepStatement.setString(1, newName);
@@ -174,7 +174,7 @@ public class BasketDB {
             ResultSet rs = prepStatement.executeQuery();
 
             while (rs.next()) {
-                String name = rs.getString("name");
+                String name = rs.getString("item");
                 Double price = rs.getDouble("price");
                 int quantity = rs.getInt("quantity");
 
@@ -194,7 +194,7 @@ public class BasketDB {
 
             while (rs.next()) {
                 String user = rs.getString("user");
-                String name = rs.getString("name");
+                String name = rs.getString("item");
                 Double price = rs.getDouble("price");
                 int quantity = rs.getInt("quantity");
                 System.out.println("User " + user);
@@ -215,7 +215,7 @@ public class BasketDB {
             ResultSet rs = prepStatement.executeQuery();
 
             while (rs.next()) {
-                String name = rs.getString("name");
+                String name = rs.getString("item");
                 Double price = rs.getDouble("price");
                 int quantity = rs.getInt("quantity");
 

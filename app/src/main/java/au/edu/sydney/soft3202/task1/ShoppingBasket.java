@@ -38,11 +38,6 @@ public class ShoppingBasket {
             this.items.put(name, 0);
         }
 
-        this.values.put("apple", 2.5);
-        this.values.put("orange", 1.25);
-        this.values.put("pear", 3.00);
-        this.values.put("banana", 4.95);
-
         // 0 count when adding new items
         this.addNewItem("apple", 2.5);
         this.addNewItem("orange", 1.25);

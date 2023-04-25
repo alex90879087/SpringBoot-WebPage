@@ -29,7 +29,7 @@ public class ShoppingController {
 
     String currentUser;
 
-    List<String> users = new ArrayList<>();
+    List<String> users;
 
     Map<String, ShoppingBasket> baskets = new HashMap<>();
 
@@ -127,6 +127,17 @@ public class ShoppingController {
     public String cart(@CookieValue(value = "session", defaultValue = "") String sessionToken, Model model) {
         if (!sessions.containsKey(sessionToken)) throw new IllegalArgumentException("Invalid User Id");
 
+        if (currentUser.equals("Admin")) {
+            try{
+                dbController.getUsers();
+            } catch (SQLException e) {
+                return "error";
+            }
+            model.addAttribute("users", users);
+
+            return "users";
+        }
+
         // to get current user's cart
         String user = sessions.get(sessionToken);
         ShoppingBasket basket = baskets.get(user);
@@ -167,7 +178,7 @@ public class ShoppingController {
             for (String each : checkBox) {
                 try {
                     dbController.removeUser(each);
-                    basketDbController.deleteItems(this.currentUser);
+                    basketDbController.deleteItems(each);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -242,11 +253,13 @@ public class ShoppingController {
 
     @PostMapping("deleteItem")
     public String deleteItem(@RequestParam("checkboxes") List<String> checkBox) {
+        System.out.println(Arrays.toString(checkBox.toArray()));
         ShoppingBasket basket = baskets.get(currentUser);
         List<String> allItems = basket.getLsOfItems();
         allItems.removeAll(checkBox);
         for (int i = 0; i < allItems.size(); i ++) {
             basket.deleteItem(allItems.get(i));
+            this.basketDbController.deleteSpecificItem(this.currentUser, allItems.get(i));
         }
         return "redirect:/cart";
     }
