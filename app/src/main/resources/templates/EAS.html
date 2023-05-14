@@ -1,11 +1,38 @@
 <!DOCTYPE html>
 <html>
+<script>function showTooltip() {
+    var tooltip = document.getElementById("tooltip");
+    tooltip.style.display = "block";
+}
+
+function hideTooltip() {
+    var tooltip = document.getElementById("tooltip");
+    tooltip.style.display = "none";
+}</script>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         body {
             font-family: Arial, sans-serif;
         }
+
+        .footnote {
+            position: relative;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        .footnote:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            top: 100%;
+            left: 0;
+            padding: 5px;
+            background-color: #fff;
+            border: 1px solid #000;
+            font-size: 12px;
+            width: 150px;
+        }
+
 
         .sidenav {
             width: 200px;
@@ -53,21 +80,24 @@
 <body>
 
 <ul class="sidenav">
-    <li><a href="#0">Who can apply?</a></li>
-    <li><a href="#">How the Educational Access Scheme works</a>
+    <li><a href="#0">Who can apply?</a>
         <ul class="sub-menu">
             <li><a href="#1">Current Year 12 applicants</a></li>
             <li><a href="#2">Applicants who have undertaken tertiary studies</a></li>
             <li><a href="#3">Elite athletes and performers</a></li>
             <li><a href="#4">Aboriginal and Torres Strait Island applicants</a></li>
-        </ul>
+        </ul></li>
+    <li><a href="#">How the Educational Access Scheme works</a>
+
     </li>
     <li><a href="#">Application dates</a></li>
     <li><a href="#">Related topics</a></li>
+    <li><a href="#5">D01B</a></li>
+
 </ul>
 
 <div class="main">
-    <h2>Education Access Scheme</h2>
+    <h2><a href="https://www.uac.edu.au/future-applicants/scholarships-and-schemes/educational-access-schemes">Education Access Scheme</a></h2>
     <pre>
         Space
         Space
@@ -253,6 +283,24 @@
     <h3>Application dates</h3>
 
     <h3>Related topics</h3>
+
+    <h3 id = 5>D01B</h3>
+    <h6>Supporting documentation required </h6>
+    <p style="font-size: 14px;">
+        A copy of your passport indicating date of entry to Australia or an <span class="footnote" data-tooltip="Estimated Process Time: Up to 14 days. Last Date to apply for International Movement Record: XX.XX.2023"><a href="https://immi.homeaffairs.gov.au/help-support/departmental-forms/online-forms/request-international-movement-records" title="International Movement Record">international movement record </a> </span> from the Department of Home Affairs.
+        A record of attendance from each secondary school you attended during Year 11 and/or Year 12 or equivalent. The record of attendance must be issued on the school letterhead, be signed by the principal or another senior person at your school, and confirm the period you attended the school. It is not a record of absences.
+    </p>
+
+
+
+
+
+    <p style="font-size: 14px;">
+        A copy of your passport indicating date of entry to Australia or an international movement record from the Department of Home Affairs.
+        A record of attendance from each secondary school you attended during Year 11 and/or Year 12 or equivalent. The record of attendance must be issued on the school letterhead, be signed by the principal or another senior person at your school, and confirm the period you attended the school. It is not a record of absences. </p>
+
+    <p>This is a sample paragraph with a <span class="footnote" data-tooltip="This is a tooltip">footnote</span>.</p>
+
 
 
 
