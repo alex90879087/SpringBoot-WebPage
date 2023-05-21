@@ -67,6 +67,79 @@ function hideTooltip() {
     img {
       width: 100%;
     }
+    :root {
+      --blue: #007bff;
+      --indigo: #6610f2;
+      --purple: #6f42c1;
+      --pink: #e83e8c;
+      --red: #dc3545;
+      --orange: #fd7e14;
+      --yellow: #ffc107;
+      --green: #28a745;
+      --teal: #20c997;
+      --cyan: #17a2b8;
+      --white: #fff;
+      --gray: #868e96;
+      --gray-dark: #343a40;
+      --primary: #007bff;
+      --secondary: #868e96;
+      --success: #28a745;
+      --info: #17a2b8;
+      --warning: #ffc107;
+      --danger: #dc3545;
+      --light: #f8f9fa;
+      --dark: #343a40;
+      --breakpoint-xs: 0;
+      --breakpoint-sm: 576px;
+      --breakpoint-md: 768px;
+      --breakpoint-lg: 992px;
+      --breakpoint-xl: 1200px;
+      --font-family-sans-serif: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+      --font-family-monospace: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+    }
+    .entry-block ul li::before {
+      font-family: "Font Awesome 5 Pro";
+      font-weight: bold;
+      font-size: 0.8em;
+      content: "\f04d";
+      color: #4a4e6a;
+      margin-right: 1em;
+      position: absolute;
+      left: 0;
+    }
+    .entry-block ul li {
+      position: relative;
+      padding-left: 20px;
+      margin-bottom: 0.5rem;
+    }
+    *, ::after, ::before {
+      box-sizing: border-box;
+    }
+    .entry-block ul {
+      list-style-type: none;
+    }
+    table {
+      border-collapse: collapse;
+    }
+    body {
+      font-family: "Inter",sans-serif;
+      font-size: 16px;
+      line-height: 26px;
+      color: #394049;
+    }
+
+    .entry-block ul li::before {
+
+      font-family: "Font Awesome 5 Pro";
+      font-weight: bold;
+      font-size: 0.8em;
+      content: "\f04d";
+      color: #4a4e6a;
+      margin-right: 1em;
+      position: absolute;
+      left: 0;
+
+    }
 
     .footnote {
       position: relative;
@@ -81,8 +154,8 @@ function hideTooltip() {
       padding: 5px;
       background-color: #fff;
       border: 1px solid #000;
-      font-size: 12px;
-      width: 200px;
+      font-size: 20px;
+      width: 390px;
     }
     .table td, .table th {
       padding: .75rem;
@@ -210,9 +283,12 @@ function hideTooltip() {
 <!--    A copy of your passport indicating date of entry to Australia or an <span class="footnote" data-tooltip="Estimated Process Time: Up to 14 days. Last Date to apply for International Movement Record: XX.XX.2023"><a href="https://immi.homeaffairs.gov.au/help-support/departmental-forms/online-forms/request-international-movement-records" title="International Movement Record">international movement record </a> </span> from the Department of Home Affairs.-->
 <!--    A record of attendance from each secondary school you attended during Year 11 and/or Year 12 or equivalent. The record of attendance must be issued on the school letterhead, be signed by the principal or another senior person at your school, and confirm the period you attended the school. It is not a record of absences.-->
 <!--  </p>-->
-  <table class = "table" style="font-size: 18px;">
-  <tbody><tr><td><p><strong>Eligibility criteria</strong></p></td><td><p>You have English as your first language and started school in Australia during Year 11 and/or Year 12 or equivalent.</p></td></tr><tr><td><p><strong>Applicant statement requirements</strong></p></td><td><ul><li>Details of the date you arrived in Australia.</li><li>Details of the school/s you attended and the period/s attended.</li><li>The country in which you undertook your secondary education before coming to Australia.</li></ul></td></tr><tr><td><p><strong>Educational impact statement required?</strong></p></td><td><p>   No.</p></td></tr><tr><td><p><strong>Supporting documentation required</strong></p></td><td><ul><li>
-    A copy of your passport indicating date of entry to Australia or an <span class="footnote" data-tooltip="Estimated Process Time: Up to 14 days. Last Date to apply for International Movement Record: XX.XX.2023"><a href="https://immi.homeaffairs.gov.au/help-support/departmental-forms/online-forms/request-international-movement-records" title="International Movement Record">international movement record </a> </span>international movement record from the Department of Home Affairs.</li>
+  <table class = "table" style="font-size: 24px;">
+  <tbody><tr><td><p><strong>Eligibility criteria</strong></p></td><td><p>You have English as your first language and started school in Australia during Year 11 and/or Year 12 or equivalent.</p></td></tr><tr><td><p><strong>Applicant statement requirements</strong></p></td><td><ul style="list-style-type: square"><li>Details of the date you arrived in Australia.</li><li>Details of the school/s you attended and the period/s attended.</li><li>The country in which you undertook your secondary education before coming to Australia.</li></ul></td></tr><tr><td><p><strong>Educational impact statement required?</strong></p></td><td><p>   No.</p></td></tr><tr><td><p><strong>Supporting documentation required</strong></p></td><td><ul style="list-style-type: square"><li>
+    A copy of your passport indicating date of entry to Australia or an
+    <span class="footnote" data-tooltip="Estimated Process Time: Up to 14 days.  Last Date to apply for International Movement Record: XX.XX.2023">
+      <a href="https://immi.homeaffairs.gov.au/help-support/departmental-forms/online-forms/request-international-movement-records" title="International Movement Record">international movement record </a>
+    </span>international movement record from the Department of Home Affairs.</li>
     <li>A record of attendance from each secondary school you attended during Year 11 and/or Year 12 or equivalent. The record of attendance must be issued on the school letterhead, be signed by the principal or another senior person at your school, and confirm the period you attended the school. It is not a record of absences. </li></ul></td></tr></tbody>
 
   </table>
